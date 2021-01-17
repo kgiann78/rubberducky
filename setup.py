@@ -16,7 +16,7 @@ setup(
                       'nltk==3.2.5',                    
                       ],
     entry_points={'console_scripts': [
-        'pysearch=rubberducky.__main__:runner'
+        'rubberducky=rubberducky.__main__:runner'
     ]},
     classifiers=[
         'Development Status :: 1 - Planning',
