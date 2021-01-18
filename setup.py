@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='rubberducky',
@@ -8,9 +8,10 @@ setup(
     author='Konstantinos Giannousis',
     author_email='kgiann78@gmail.com',
     license='BSD 2-clause',
-    packages=['rubberducky'],
+    packages=['rubberducky', 'rubberducky.core'],
+    include_package_data=True,
     install_requires=['search-engine-parser',
-                      'aiohttp', 
+                      'aiohttp==3.6.2', 
                       'simple_chalk==0.1.0',
                       'textblob==0.15.0',
                       'nltk==3.2.5',                    
