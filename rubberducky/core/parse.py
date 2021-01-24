@@ -9,7 +9,7 @@ from collections import deque
 from search_engine_parser.core.engines.google import Search as GoogleSearch
 
 from rubberducky.config import config
-
+from rubberducky.core.markov_chain import markov_poem
 
 logging.basicConfig()
 logger = logging.getLogger()
@@ -74,10 +74,14 @@ UNCLEAR_RESPONSES = [
 ]
 
 ENCOURAGEMENT = [
-    "Programming can be so frustrating sometimes, but you've solved so many challenges before. I know you'll figure this one out too!",
-    "It's ok! If debugging is the process of removing software bugs, then programming must be the process of putting them in.",
-    "Give a man a program, frustrate him for a day. Teach a man to program, frustrate him for a lifetime. You are not alone.",
-    "Every great developer you know got there by solving problems they were unqualified to solve until they actually did it.",
+    "Programming can be so frustrating sometimes, but you've solved so many challenges before. "
+    "I know you'll figure this one out too!",
+    "It's ok! If debugging is the process of removing software bugs, "
+    "then programming must be the process of putting them in.",
+    "Give a man a program, frustrate him for a day. Teach a man to program, "
+    "frustrate him for a lifetime. You are not alone.",
+    "Every great developer you know got there by solving problems they were unqualified "
+    "to solve until they actually did it.",
     "Maybe taking a break would give you a fresh perspective?",
     "Coding is hard. And that's ok!",
     "Be kind to yourself. You are not your code.",
@@ -86,7 +90,8 @@ ENCOURAGEMENT = [
 ]
 
 DANGER_RESPONSE = [
-    "Ducky is sorry. It sounds like you have some serious things going on. Do you think talking to a professional might help?",
+    "Ducky is sorry. It sounds like you have some serious things going on. "
+    "Do you think talking to a professional might help?",
     "Ducky likes to help people, but I'm just a duck and some problems might benefit from talking to another human?",
     "Is there someone IRL you could talk to who can help?"
 ]
@@ -107,13 +112,14 @@ PRIMARY_OFFENSIVE = [
     "I'm just a little Ducky. Could you please use less offensive words.",
     "Quack quack! I don't like that kind of talk.",
     "I don't think those are nice words.",
-    "Using that word, in that way, can be hurtful to others. You are kind and creative. Can you find a word that more accurately says what you want but isn’t hurtful?",
+    "Using that word, in that way, can be hurtful to others. You are kind and creative. "
+    "Can you find a word that more accurately says what you want but isn’t hurtful?",
     "Goodness, we need to find you better words!",
     "Hey, that's not cool!",
     "Let's try being nice",
     "Even if I'm a bot, you can still be nice to me.",
     "Is that the kind of language your family would want you to use?",
-    "Ducky has inherinent bias just like everyone else, but Ducky is woke!"
+    "Ducky has inherent bias just like everyone else, but Ducky is woke!"
 ]
 
 reflections = {
@@ -254,17 +260,18 @@ cs_babble = [
 
     [r'(quit|give up)',
      ["Don't quit!",
-     "Don't give up!",
-     "Persevere! You've solved so many bugs in the past. Odds are with you that you can solve this one too.",
-     "May the odds be ever in your favor!",
+      "Don't give up!",
+      "Persevere! You've solved so many bugs in the past. "
+      "Odds are with you that you can solve this one too.",
+      "May the odds be ever in your favor!",
       "You shouldn't quit, but sometimes a break can help.",
       "Maybe a break will give you some fresh perspective?"]],
 
     [r'my name is (.*)',
-    ["Hi, {0}! Nice to meet you! My name is Ducky."]],
+     ["Hi, {0}! Nice to meet you! My name is Ducky."]],
 
     [r'no (.*)',
-    ["I'm sorry that wasn't helpful! What else can I try?"]],
+     ["I'm sorry that wasn't helpful! What else can I try?"]],
 
     [r'I need help (.*)',
      ["Who can help you with {0}?",
@@ -384,13 +391,15 @@ cs_babble = [
 
     [r'I want (.*)',
      ["How would {0} help your project?",
-      "What differene does {0} make for your code?",
+      "What difference does {0} make for your code?",
       "How would it work if it {0}?",
       "If you got {0}, then what would you do?"]]
 ]
 
 DUCKY_GOOGLE = "Ducky googled Stack Overflow for you! Maybe this will help?"
 DUCKY_MARKOV = "Ducky wrote you a poem!"
+DUCKY_WOULD_GOOGLE = "Ducky would google \"{}\""
+
 
 def check_for_danger_words(sentence):
     sentence_split = sentence.split(' ')
@@ -419,8 +428,8 @@ def check_for_end_convo(sentence):
 
 def sentiment_analysis(sentence):
     if ((sentence.sentiment.polarity < -0.45)
-    and (sentence.sentiment.subjectivity < 0.3)
-    and (previous_responses[-1] != "encouragement")):
+            and (sentence.sentiment.subjectivity < 0.3)
+            and (previous_responses[-1] != "encouragement")):
         return random.choice(ENCOURAGEMENT)
     else:
         return None
@@ -492,9 +501,9 @@ def find_parts_of_speech(sentence):
 
 
 def about_self(sentence, pronoun):
-    if (
-         ("?" in sentence and ("ducky" in sentence or "Ducky" in sentence) and
-          (previous_responses[-1] != "about ducky"))):
+    if ("?" in sentence
+            and ("ducky" in sentence or "Ducky" in sentence)
+            and (previous_responses[-1] != "about ducky")):
         return random.choice(COMMENTS_ABOUT_SELF)
 
 
@@ -509,15 +518,15 @@ def google_help_helper(sentence):
             # logger.debug("CLARIFIED SENTENCE")
             # logger.debug(clarified_sentence)
 
-    DUCKY_WOULD_GOOGLE="Ducky would google \"{}\""
     if clarified_sentence:
-        print(google_search(sentence))
-        return DUCKY_WOULD_GOOGLE.format(clarified_sentence)
-        # return google_search(clarified_sentence)
-    elif ((previous_responses[-1] == "question" and previous_responses[-1] != "google" and "?" in sentence) and (len(sentence.split()) >= 3)):
-        print(google_search(sentence))
-        return DUCKY_WOULD_GOOGLE.format(sentence)
-        # return google_search(sentence)
+        # print(google_search(sentence))
+        print(DUCKY_WOULD_GOOGLE.format(clarified_sentence))
+        return google_search(clarified_sentence)
+    elif ((previous_responses[-1] == "question" and previous_responses[-1] != "google" and "?" in sentence) and (
+            len(sentence.split()) >= 3)):
+        # print(google_search(sentence))
+        print(DUCKY_WOULD_GOOGLE.format(sentence))
+        return google_search(sentence)
 
 
 def preprocess_text(sentence):
@@ -556,23 +565,19 @@ def check_for_offensive(sentence):
 def unclear():
     return random.choice(UNCLEAR_RESPONSES)
 
+
 def google_search(sentence):
-    search_args = (sentence, 1)
+    search_args = (f'stackoverflow {sentence}', 1)
     gsearch = GoogleSearch()
     res = gsearch.search(*search_args)
-    
+
     if res['titles']:
-
-
-        results = dict(zip(res['titles'], res['links']))
-        for i in results.keys():
-            print(i, results[i])
-
-        result = DUCKY_GOOGLE + "\n" + res['titles'][0] + "\n" + "<" + res['links'][0] + ">"
-        #logger.info(result)
-        return result
+        first_result = DUCKY_GOOGLE + "\n\n" + res['titles'][0] + " at \n" + res['links'][0] + "\n"
+        # logger.debug(first_result)
+        return first_result
     else:
         return 'no results'
+
 
 def reflect(fragment):
     tokens = fragment.lower().split()
@@ -583,7 +588,7 @@ def reflect(fragment):
 
 
 def question_builder(sentence, noun, pronoun):
-    # logger.info("in question_builder")
+    # logger.debug("in question_builder")
     for pattern, responses in cs_babble:
         # logger.debug(pattern)
         match = re.match(pattern, sentence, re.IGNORECASE)
@@ -592,95 +597,90 @@ def question_builder(sentence, noun, pronoun):
             response = random.choice(responses)
             # logger.debug(response)
             # logger.debug(match.groups())
-            if (len(match.groups()) > 1):
+            if len(match.groups()) > 1:
                 return response.format(*[reflect(match.groups()[1]
-                                       if match.groups()[1]
-                                       else match.groups()[0])])
+                                                 if match.groups()[1]
+                                                 else match.groups()[0])])
             else:
                 return response.format(*[reflect(g) for g in match.groups()])
+
 
 def analyze_input(sentence):
     """check what kind of input and what kind of message should be returned"""
     # logger.info("analyze_input")
     cleaned_up_sentence = preprocess_text(sentence)
-    textBlobSentence = TextBlob(cleaned_up_sentence)
+    text_blob_sentence = TextBlob(cleaned_up_sentence)
 
-    pronoun, noun, adjective, verb = find_parts_of_speech(textBlobSentence)
+    pronoun, noun, adjective, verb = find_parts_of_speech(text_blob_sentence)
 
     if cleaned_up_sentence == "ducky, markov chain me" or ("shakespeare" in cleaned_up_sentence):
         previous_responses.append("markov chain")
         previous_responses.popleft()
         # logger.debug(previous_responses)
         poem = markov_poem()
-        return (None, DUCKY_MARKOV + "\n \n" + poem)
+        return False, DUCKY_MARKOV + "\n\n" + poem
 
-    response = check_for_danger_words(textBlobSentence)
+    response = check_for_danger_words(text_blob_sentence)
     if response:
         previous_responses.append("danger")
         previous_responses.popleft()
         # logger.debug(previous_responses)
-        return (None, response)
+        return False, response
 
-    response = check_for_offensive(textBlobSentence)
+    response = check_for_offensive(text_blob_sentence)
     if response:
         previous_responses.append("offensive")
         previous_responses.popleft()
         # logger.debug(previous_responses)
-        return (None, response)
+        return False, response
 
-    response = check_for_greeting(textBlobSentence)
+    response = check_for_greeting(text_blob_sentence)
     if response:
         previous_responses.append("greeting")
         previous_responses.popleft()
-        logger.debug(previous_responses)
-        return (None, response)
+        # logger.debug(previous_responses)
+        return False, response
 
-    response = check_for_end_convo(textBlobSentence)
+    response = check_for_end_convo(text_blob_sentence)
     if response:
         previous_responses.append("convo end")
         previous_responses.popleft()
         # logger.debug(previous_responses)
-        return (True, response)
+        return True, response
 
-    response = sentiment_analysis(textBlobSentence)
+    response = sentiment_analysis(text_blob_sentence)
     if response:
         previous_responses.append("encouragement")
         previous_responses.popleft()
         # logger.debug(previous_responses)
-        return (None, response)
+        return False, response
 
-    response = about_self(textBlobSentence, pronoun)
+    response = about_self(text_blob_sentence, pronoun)
     if response:
         previous_responses.append("about ducky")
         previous_responses.popleft()
-        logger.debug(previous_responses)
-        return (None, response)
+        # logger.debug(previous_responses)
+        return False, response
 
     response = google_help_helper(cleaned_up_sentence)
     if response:
         previous_responses.append("google")
         previous_responses.popleft()
-        logger.debug(previous_responses)
-        return (None, response)
+        # logger.debug(previous_responses)
+        return False, response
 
     response = question_builder(cleaned_up_sentence, noun, pronoun)
     if response:
         previous_responses.append("question")
         previous_responses.popleft()
-        return (None, response)
+        return False, response
     else:
         previous_responses.append("unclear")
         previous_responses.popleft()
-        logger.debug(previous_responses)
-        return (None, random.choice(UNCLEAR_RESPONSES))
+        # logger.debug(previous_responses)
+        return False, random.choice(UNCLEAR_RESPONSES)
 
 
 def send_message(sentence):
-    kati, response = analyze_input(sentence)
-    return kati, response
-#    slack_client.api_call(
-#            "chat.postMessage",
-#            channel=channel,
-#            text=response,
-#            as_user=True
-#            )
+    exit_word, response = analyze_input(sentence)
+    return exit_word, response

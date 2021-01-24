@@ -5,11 +5,10 @@ from rubberducky.core.text_map import ducky
 from rubberducky.core.parse import send_message
 
 
-class RubberDucky():
+class RubberDucky:
 
     def _print(self):
-        print(chalk.green("success"))
-        print(yellow("my rubber ducky"))
+        print(yellow("My own rubber ducky"))
         for line in ducky():
             print(line)
 
@@ -21,10 +20,10 @@ class RubberDucky():
                 break
 
             try:
-                kati, response = self.reply(text)
+                exit_word, response = self.reply(text)
                 print('ducky: {}'.format(response))
-                if kati is not None:
-                  break
+                if exit_word:
+                    break
             except Exception as e:
                 print('ducky: error: {}'.format(e))
 
